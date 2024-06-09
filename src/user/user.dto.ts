@@ -2,9 +2,8 @@ import {
   IsEmail,
   IsNotEmpty,
   IsArray,
-  IsOptional,
-  IsStrongPassword,
-} from 'class-validator';
+  IsOptional
+} from "class-validator";
 import { Role } from '../role/role.enum';
 
 export class UserCreateDTO {
@@ -14,7 +13,7 @@ export class UserCreateDTO {
   @IsEmail()
   email: string;
 
-  @IsStrongPassword()
+  @IsNotEmpty()
   password: string;
 
   @IsArray()

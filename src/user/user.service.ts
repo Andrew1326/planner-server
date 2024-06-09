@@ -9,6 +9,7 @@ import { UserEntity } from './user.entity';
 import { EncryptorService } from '../util/encryptor/encryptor.service';
 import { IUser } from './types';
 import { Role } from 'src/role/role.enum';
+import { get } from 'lodash';
 
 @Injectable()
 export class UserService {
@@ -35,10 +36,13 @@ export class UserService {
         .getRepository(UserEntity)
         .insert(userDTO);
 
+      // define user id
+      const userId = get(userCreateRes, 'identifiers[0].id');
+
       // analytics success
       return this.analytics.success({
         message: 'User created.',
-        payload: userCreateRes,
+        payload: userId,
       });
     } catch (err) {
       // analytics fail
