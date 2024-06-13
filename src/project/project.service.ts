@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ProjectUpdateDto } from './dto/project-update.dto';
 import {
   AnalyticsService,
   IAnalytics,
@@ -22,21 +21,14 @@ export class ProjectService {
   ) {}
 
   // method creates a project
-  async create({
-    projectCreateDto,
-    owner,
-  }: IProjectCreatePayload): Promise<IAnalytics<string | Error>> {
+  async create(
+    projectCreatePayload: IProjectCreatePayload,
+  ): Promise<IAnalytics<string | Error>> {
     try {
-      // payload for project creation
-      const projectCreateData: Omit<any, any> = {
-        owner,
-        ...projectCreateDto,
-      };
-
       // insert record
       const projectCreateRes = await this.dataSource
         .getRepository(Project)
-        .insert(projectCreateData);
+        .insert(projectCreatePayload);
 
       // define project id
       const projectId = get(projectCreateRes, 'identifiers[0].id');

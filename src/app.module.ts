@@ -5,9 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './typeorm.config';
 import { AnalyticsModule } from './utils/analytics/analytics.module';
 import { EncryptorModule } from './utils/encryptor/encryptor.module';
-import { User } from './user/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { ProjectModule } from './project/project.module';
+import { BoardModule } from './board/board.module';
 
 @Module({
   imports: [
@@ -16,12 +16,12 @@ import { ProjectModule } from './project/project.module';
       imports: [ConfigModule],
       useClass: TypeOrmConfigService,
     }),
-    TypeOrmModule.forFeature([User]),
     UserModule,
     AnalyticsModule,
     EncryptorModule,
     AuthModule,
     ProjectModule,
+    BoardModule,
   ],
 })
 export class AppModule {}

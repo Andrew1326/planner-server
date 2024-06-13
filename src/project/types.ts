@@ -1,5 +1,5 @@
 import { Project } from './entities/project.entity';
-import { User } from '../user/user.entity';
+import { User } from '../user/entities/user.entity';
 import { ProjectCreateDto } from './dto/project-create.dto';
 import { ProjectUpdateDto } from './dto/project-update.dto';
 

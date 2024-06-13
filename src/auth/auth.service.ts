@@ -7,7 +7,7 @@ import {
 } from '../utils/analytics/analytics.service';
 import { EncryptorService } from '../utils/encryptor/encryptor.service';
 import { UserService } from '../user/user.service';
-import { User } from '../user/user.entity';
+import { User } from '../user/entities/user.entity';
 
 export interface ILocalCredentials {
   email: string;

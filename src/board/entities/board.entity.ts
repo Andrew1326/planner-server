@@ -1,8 +1,9 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
+import { Project } from '../../project/entities/project.entity';
 
-@Entity('project')
-export class Project {
+@Entity('board')
+export class Board {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -14,4 +15,7 @@ export class Project {
 
   @ManyToOne(() => User, { eager: true })
   owner: User | string;
+
+  @ManyToOne(() => Project, { eager: true })
+  project: Project | string;
 }

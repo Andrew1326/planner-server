@@ -19,13 +19,16 @@ import { ISessionUser } from '../user/types';
 import { get } from 'lodash';
 import { AuthJwtGuard } from '../auth/auth-jwt.guard';
 import { UserService } from '../user/user.service';
-import { User } from '../user/user.entity';
+import { User } from '../user/entities/user.entity';
+import { BoardService } from '../board/board.service';
+import { ISafeProject } from './types';
 
 @Controller('project')
 export class ProjectController {
   constructor(
     private readonly projectService: ProjectService,
     private readonly userService: UserService,
+    private readonly boardService: BoardService,
   ) {}
 
   // route for project creation
@@ -65,6 +68,7 @@ export class ProjectController {
   }
 
   // route for all project receiving
+  @UseGuards(AuthJwtGuard)
   @Get()
   async findAll(@Res() res: Response) {
     // find all project
@@ -79,9 +83,10 @@ export class ProjectController {
   }
 
   // route for receiving project by id
+  @UseGuards(AuthJwtGuard)
   @Get(':id')
   async findById(@Param('id') projectId: string, @Res() res: Response) {
-    // find all project
+    // find project by id
     const projectFindRes = await this.projectService.findById(projectId);
 
     // define http status based on project find result
@@ -93,6 +98,7 @@ export class ProjectController {
   }
 
   // route for project modification
+  @UseGuards(AuthJwtGuard)
   @Patch(':id')
   async update(
     @Param('id') projectId: string,
@@ -114,6 +120,7 @@ export class ProjectController {
   }
 
   // route for project deletion
+  @UseGuards(AuthJwtGuard)
   @Delete(':id')
   async remove(@Param('id') projectId: string, @Res() res: Response) {
     // remove project
@@ -125,5 +132,23 @@ export class ProjectController {
       : HttpStatus.OK;
 
     res.status(httpStatus).json(removeProjectRes);
+  }
+
+  // route for receiving boards by project
+  @UseGuards(AuthJwtGuard)
+  @Get(':id/board')
+  async boardFindByProject(
+    @Param('id') projectId: string,
+    @Res() res: Response,
+  ) {
+    // find boards by project
+    const boardFindRes = await this.boardService.findByProject(projectId);
+
+    // define http status based on board find result
+    const httpStatus: number = boardFindRes.fail
+      ? HttpStatus.OK
+      : HttpStatus.BAD_REQUEST;
+
+    res.status(httpStatus).json(boardFindRes);
   }
 }

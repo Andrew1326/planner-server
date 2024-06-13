@@ -5,7 +5,7 @@ import {
   AnalyticsService,
   IAnalytics,
 } from '../utils/analytics/analytics.service';
-import { User } from './user.entity';
+import { User } from './entities/user.entity';
 import { EncryptorService } from '../utils/encryptor/encryptor.service';
 import { Role } from 'src/role/role.enum';
 import { get } from 'lodash';

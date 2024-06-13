@@ -15,7 +15,7 @@ import { Response, Request } from 'express';
 import { get } from 'lodash';
 import { ISessionUser } from './types';
 import { AuthJwtGuard } from '../auth/auth-jwt.guard';
-import { User } from './user.entity';
+import { User } from './entities/user.entity';
 
 @Controller('/user')
 export class UserController {
