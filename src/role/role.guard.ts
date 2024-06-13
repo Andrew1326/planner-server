@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { Role } from './role.enum';
 import { ROLES_KEY } from './role.decorator';
 import { get, intersection } from 'lodash';
-import { IUser } from '../user/types';
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
@@ -24,7 +24,7 @@ export class RoleGuard implements CanActivate {
     const req = context.switchToHttp().getRequest();
 
     // define user
-    const user: IUser = get(req, 'user');
+    const user: User = get(req, 'user');
 
     // allow access only if user includes all mentioned roles
     const hasUserAccess: boolean =

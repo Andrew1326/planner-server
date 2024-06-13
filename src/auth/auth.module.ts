@@ -4,13 +4,12 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UserEntity } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { AuthJwtConfig } from './auth-jwt.config';
 import { AuthLocalStrategy } from './auth-local.strategy';
 import { AuthJwtStrategy } from './auth-jwt.strategy';
-import { AnalyticsService } from '../util/analytics/analytics.service';
-import { EncryptorService } from '../util/encryptor/encryptor.service';
+import { AnalyticsService } from '../utils/analytics/analytics.service';
+import { EncryptorService } from '../utils/encryptor/encryptor.service';
 
 @Module({
   imports: [
@@ -19,7 +18,6 @@ import { EncryptorService } from '../util/encryptor/encryptor.service';
       imports: [ConfigModule],
       useClass: AuthJwtConfig,
     }),
-    UserEntity,
   ],
   providers: [
     AuthService,

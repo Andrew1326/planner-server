@@ -3,10 +3,11 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './typeorm.config';
-import { AnalyticsModule } from './util/analytics/analytics.module';
-import { EncryptorModule } from './util/encryptor/encryptor.module';
-import { UserEntity } from './user/user.entity';
+import { AnalyticsModule } from './utils/analytics/analytics.module';
+import { EncryptorModule } from './utils/encryptor/encryptor.module';
+import { User } from './user/user.entity';
 import { AuthModule } from './auth/auth.module';
+import { ProjectModule } from './project/project.module';
 
 @Module({
   imports: [
@@ -15,11 +16,12 @@ import { AuthModule } from './auth/auth.module';
       imports: [ConfigModule],
       useClass: TypeOrmConfigService,
     }),
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([User]),
     UserModule,
     AnalyticsModule,
     EncryptorModule,
     AuthModule,
+    ProjectModule,
   ],
 })
 export class AppModule {}

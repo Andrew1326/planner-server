@@ -4,10 +4,10 @@ import { pick } from 'lodash';
 import {
   AnalyticsService,
   IAnalytics,
-} from '../util/analytics/analytics.service';
-import { EncryptorService } from '../util/encryptor/encryptor.service';
+} from '../utils/analytics/analytics.service';
+import { EncryptorService } from '../utils/encryptor/encryptor.service';
 import { UserService } from '../user/user.service';
-import { IUser } from '../user/types';
+import { User } from '../user/user.entity';
 
 export interface ILocalCredentials {
   email: string;
@@ -25,8 +25,8 @@ export class AuthService {
 
   // method handlers user login (generates jwt)
   async login(
-    user: Pick<IUser, 'email' | 'name'>,
-  ): Promise<IAnalytics<string | undefined>> {
+    user: Pick<User, 'email' | 'name'>,
+  ): Promise<IAnalytics<string | Error>> {
     const payload = pick(user, 'email', 'name', 'roles');
 
     try {
@@ -40,7 +40,7 @@ export class AuthService {
     } catch (err) {
       return this.analytics.fail({
         message: 'Token not generated',
-        error: err as Error,
+        payload: err as Error,
       });
     }
   }
@@ -48,12 +48,12 @@ export class AuthService {
   // function is used to validate user using credentials (email and password)
   async validateUser({ email, password }: ILocalCredentials): Promise<any> {
     // get user by email
-    const userGetRes = await this.userService.userGetByEmail(email);
+    const userGetRes = await this.userService.getByEmail(email);
 
     // return error if user wasn't found
     if (userGetRes.fail) return userGetRes;
 
-    const user = userGetRes.payload as IUser;
+    const user = userGetRes.payload as User;
 
     // check if passwords match
     const passwordMatch = await this.encryptor.compare({

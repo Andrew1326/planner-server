@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { UserCreateDTO } from './user.dto';
-import { DataSource, InsertResult } from 'typeorm';
+import { UserCreateDto } from './dto/user-create.dto';
+import { DataSource } from 'typeorm';
 import {
   AnalyticsService,
   IAnalytics,
-} from '../util/analytics/analytics.service';
-import { UserEntity } from './user.entity';
-import { EncryptorService } from '../util/encryptor/encryptor.service';
-import { IUser } from './types';
+} from '../utils/analytics/analytics.service';
+import { User } from './user.entity';
+import { EncryptorService } from '../utils/encryptor/encryptor.service';
 import { Role } from 'src/role/role.enum';
 import { get } from 'lodash';
 
@@ -20,21 +19,26 @@ export class UserService {
   ) {}
 
   // method for creating a new user
-  async userCreate(userDTO: UserCreateDTO): Promise<IAnalytics<InsertResult>> {
+  async create(
+    userCreateDto: UserCreateDto,
+  ): Promise<IAnalytics<string | Error>> {
     try {
-      // add initial role to user dto
-      userDTO.roles = [Role.User];
+      // payload for user creation
+      const userCreateData: Omit<User, 'id'> = {
+        roles: [Role.User],
+        ...userCreateDto,
+      };
 
       // hash user password
-      userDTO.password = await this.encryptor.hash({
-        plainStr: userDTO.password,
+      userCreateData.password = await this.encryptor.hash({
+        plainStr: userCreateDto.password,
         saltRounds: 10,
       });
 
       // insert record
       const userCreateRes = await this.dataSource
-        .getRepository(UserEntity)
-        .insert(userDTO);
+        .getRepository(User)
+        .insert(userCreateData);
 
       // define user id
       const userId = get(userCreateRes, 'identifiers[0].id');
@@ -46,29 +50,28 @@ export class UserService {
       });
     } catch (err) {
       // analytics fail
-      return this.analytics.fail({ message: 'User create fail.', error: err });
+      return this.analytics.fail({
+        message: 'User create fail.',
+        payload: err,
+      });
     }
   }
 
   // method returns user by email
-  async userGetByEmail(email: string): Promise<IAnalytics<IUser | undefined>> {
+  async getByEmail(email: string): Promise<IAnalytics<User | Error>> {
     try {
       // get user record
       const user = await this.dataSource
-        .getRepository(UserEntity)
+        .getRepository(User)
         .createQueryBuilder('user')
         .where('user.email = :email', { email })
         .getOne();
 
       // handler not found
-      if (!user) {
-        return this.analytics.fail({
-          message: 'User with current email was not found.',
-        });
-      }
+      if (!user) throw new Error('User not found');
 
       // analytics success
-      return this.analytics.success<IUser>({
+      return this.analytics.success<User>({
         message: 'User get by email success.',
         payload: user,
       });
@@ -76,7 +79,34 @@ export class UserService {
       // analytics fail
       return this.analytics.fail({
         message: 'User get by email fail.',
-        error: err,
+        payload: err,
+      });
+    }
+  }
+
+  // method return user by id
+  async getById(id: string): Promise<IAnalytics<User | Error>> {
+    try {
+      // get user record
+      const user = await this.dataSource
+        .getRepository(User)
+        .createQueryBuilder('user')
+        .where('user.id = :id', { id })
+        .getOne();
+
+      // handler not found
+      if (!user) throw new Error('User not found');
+
+      // analytics success
+      return this.analytics.success<User>({
+        message: 'User get by id success.',
+        payload: user,
+      });
+    } catch (err) {
+      // analytics fail
+      return this.analytics.fail({
+        message: 'User get by id fail.',
+        payload: err,
       });
     }
   }

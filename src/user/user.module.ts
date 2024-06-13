@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
-import { AnalyticsService } from '../util/analytics/analytics.service';
-import { EncryptorService } from '../util/encryptor/encryptor.service';
+import { AnalyticsService } from '../utils/analytics/analytics.service';
+import { EncryptorService } from '../utils/encryptor/encryptor.service';
 
 @Module({
   controllers: [UserController],

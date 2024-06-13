@@ -1,11 +1,10 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 
 export interface IAnalytics<TPayload> {
-  message?: string;
+  message: string;
   payload?: TPayload;
   success?: boolean;
   fail?: boolean;
-  error?: Error;
 }
 
 // TODO implement additional logic for caching errors using Sentry
@@ -15,11 +14,11 @@ export class AnalyticsService {
   constructor() {}
 
   success<TPayload>(data: IAnalytics<TPayload>): IAnalytics<TPayload> {
-    return { ...data, success: true };
+    return { ...data, success: true, fail: false };
   }
 
   fail<TPayload>(data: IAnalytics<TPayload>): IAnalytics<TPayload> {
-    return { ...data, fail: true };
+    return { ...data, fail: true, success: false };
   }
 
   defineHttpStatus(data: IAnalytics<unknown>): HttpStatus {

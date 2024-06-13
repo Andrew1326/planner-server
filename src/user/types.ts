@@ -1,9 +1,6 @@
-import { Role } from '../role/role.enum';
+import { User } from './user.entity';
 
-export interface IUser {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-  roles: Role[];
+export interface ISessionUser extends Pick<User, 'name' | 'email' | 'roles'> {
+  iat: number;
+  exp: number;
 }
