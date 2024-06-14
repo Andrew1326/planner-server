@@ -8,6 +8,7 @@ import { EncryptorModule } from './utils/encryptor/encryptor.module';
 import { AuthModule } from './auth/auth.module';
 import { ProjectModule } from './project/project.module';
 import { BoardModule } from './board/board.module';
+import { SystemModule } from "./system/system.module";
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { BoardModule } from './board/board.module';
     AuthModule,
     ProjectModule,
     BoardModule,
+    SystemModule
   ],
 })
 export class AppModule {}

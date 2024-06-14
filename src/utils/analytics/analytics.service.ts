@@ -18,6 +18,9 @@ export class AnalyticsService {
   }
 
   fail<TPayload>(data: IAnalytics<TPayload>): IAnalytics<TPayload> {
+    console.log(`===========${data.message}===========`);
+    console.log(data.payload);
+
     return { ...data, fail: true, success: false };
   }
 
