@@ -1,26 +1,45 @@
 import { Injectable } from '@nestjs/common';
 import { TaskCreateDto } from './dto/task-create.dto';
-import { TaskUpdateDto } from './dto/task-update.dto';
+import safeExecute from "../utils/safe-execute/safeExecute";
+import { DataSource } from "typeorm";
+import { Task } from "./entities/task.entity";
+import { ITaskUpdatePayload } from "./types";
 
 @Injectable()
 export class TaskService {
-  create(createTaskDto: TaskCreateDto) {
-    return 'This action adds a new task';
+  constructor(private readonly dataSource: DataSource) {
   }
 
-  findAll() {
-    return `This action returns all task`;
+  // method for task creation
+  create(taskCreateDto: TaskCreateDto) {
+    return safeExecute<string>({ successMessage: 'Task created', failureMessage: 'Task create fail' })(async () => {
+    // create task
+      const taskCreateRes = await this.dataSource.getRepository(Task).insert(taskCreateDto);
+
+    // define created task id
+      const taskId = taskCreateRes.identifiers[0].id;
+
+      return taskId
+    })
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
+  // method updates task
+  update({ taskId, taskUpdateDto }: ITaskUpdatePayload) {
+    return safeExecute<string>({ successMessage: 'Task updated', failureMessage: 'Task update fail' })(async () => {
+    // update task
+      await this.dataSource.getRepository(Task).update({ id: taskId }, taskUpdateDto);
+
+      return taskId
+    })
   }
 
-  update(id: number, updateTaskDto: TaskUpdateDto) {
-    return `This action updates a #${id} task`;
-  }
+  // method removes task by id
+  remove(taskId: string) {
+    return safeExecute<string>({ successMessage: 'Task removed', failureMessage: 'Task remove fail' })(async () => {
+      // remove task
+      await this.dataSource.getRepository(Task).delete({ id: taskId });
 
-  remove(id: number) {
-    return `This action removes a #${id} task`;
+      return taskId
+    })
   }
 }

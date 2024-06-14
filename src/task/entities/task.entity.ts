@@ -13,8 +13,8 @@ export class Task {
   @Column({ type: 'text', name: 'description' })
   description: string;
 
-  @ManyToOne(() => TaskGroup, (group) => group.id)
-  group: TaskGroup;
+  @ManyToOne(() => TaskGroup, (group) => group.tasks)
+  group: TaskGroup | string;
 
   @ManyToOne(() => User)
   owner: User | string;
