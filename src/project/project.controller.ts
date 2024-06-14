@@ -21,13 +21,15 @@ import { AuthJwtGuard } from '../auth/auth-jwt.guard';
 import { UserService } from '../user/user.service';
 import { BoardService } from '../board/board.service';
 import { IProjectCreatePayload } from './types';
+import { AnalyticsService } from '../utils/analytics/analytics.service';
 
 @Controller('project')
 export class ProjectController {
   constructor(
-    private projectService: ProjectService,
+    private readonly projectService: ProjectService,
     private readonly userService: UserService,
     private readonly boardService: BoardService,
+    private readonly analyticsService: AnalyticsService,
   ) {}
 
   // route for project creation
@@ -63,9 +65,8 @@ export class ProjectController {
       await this.projectService.create(projectCreatePayload);
 
     // define http status based on project creation result
-    const httpStatus: number = projectCreateRes.fail
-      ? HttpStatus.BAD_REQUEST
-      : HttpStatus.OK;
+    const httpStatus: number =
+      this.analyticsService.defineHttpStatus(projectCreateRes);
 
     res.status(httpStatus).json(projectCreateRes);
   }
@@ -78,9 +79,8 @@ export class ProjectController {
     const projectFindRes = await this.projectService.findById(projectId);
 
     // define http status based on project find result
-    const httpStatus: number = projectFindRes.fail
-      ? HttpStatus.BAD_REQUEST
-      : HttpStatus.OK;
+    const httpStatus: number =
+      this.analyticsService.defineHttpStatus(projectFindRes);
 
     res.status(httpStatus).json(projectFindRes);
   }
@@ -100,9 +100,8 @@ export class ProjectController {
     });
 
     // define http status based on project update result
-    const httpStatus: number = projectUpdateRes.fail
-      ? HttpStatus.BAD_REQUEST
-      : HttpStatus.OK;
+    const httpStatus: number =
+      this.analyticsService.defineHttpStatus(projectUpdateRes);
 
     res.status(httpStatus).json(projectUpdateRes);
   }
@@ -115,9 +114,8 @@ export class ProjectController {
     const removeProjectRes = await this.projectService.remove(projectId);
 
     // define http status based on project update result
-    const httpStatus: number = removeProjectRes.fail
-      ? HttpStatus.BAD_REQUEST
-      : HttpStatus.OK;
+    const httpStatus: number =
+      this.analyticsService.defineHttpStatus(removeProjectRes);
 
     res.status(httpStatus).json(removeProjectRes);
   }
@@ -133,9 +131,8 @@ export class ProjectController {
     const boardFindRes = await this.boardService.findByProject(projectId);
 
     // define http status based on board find result
-    const httpStatus: number = boardFindRes.fail
-      ? HttpStatus.OK
-      : HttpStatus.BAD_REQUEST;
+    const httpStatus: number =
+      this.analyticsService.defineHttpStatus(boardFindRes);
 
     res.status(httpStatus).json(boardFindRes);
   }

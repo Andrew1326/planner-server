@@ -20,12 +20,14 @@ import { Request, Response } from 'express';
 import { UserService } from '../user/user.service';
 import { ITaskGroupCreatePayload } from './types';
 import { AuthJwtGuard } from '../auth/auth-jwt.guard';
+import { AnalyticsService } from '../utils/analytics/analytics.service';
 
 @Controller('task_group')
 export class TaskGroupController {
   constructor(
     private readonly taskGroupService: TaskGroupService,
     private readonly userService: UserService,
+    private readonly analytics: AnalyticsService,
   ) {}
 
   // route for task group creation
@@ -62,9 +64,8 @@ export class TaskGroupController {
     );
 
     // define http status based on task group creation result
-    const httpStatus: number = taskGroupCreateRes.fail
-      ? HttpStatus.OK
-      : HttpStatus.BAD_REQUEST;
+    const httpStatus: number =
+      this.analytics.defineHttpStatus(taskGroupCreateRes);
 
     res.status(httpStatus).json(taskGroupCreateRes);
   }
@@ -84,9 +85,8 @@ export class TaskGroupController {
     });
 
     // define http status
-    const httpStatus: number = taskGroupUpdateRes.fail
-      ? HttpStatus.BAD_REQUEST
-      : HttpStatus.OK;
+    const httpStatus: number =
+      this.analytics.defineHttpStatus(taskGroupUpdateRes);
 
     res.status(httpStatus).json(taskGroupUpdateRes);
   }
@@ -99,9 +99,8 @@ export class TaskGroupController {
     const taskGroupRemoveRes = await this.taskGroupService.remove(taskGroupId);
 
     // define http status
-    const httpStatus: number = taskGroupRemoveRes.fail
-      ? HttpStatus.BAD_REQUEST
-      : HttpStatus.OK;
+    const httpStatus: number =
+      this.analytics.defineHttpStatus(taskGroupRemoveRes);
 
     res.status(httpStatus).json(taskGroupRemoveRes);
   }
@@ -114,9 +113,8 @@ export class TaskGroupController {
     const taskGroupFindRes = await this.taskGroupService.findById(taskGroupId);
 
     // define http status based on task group find result
-    const httpStatus: number = taskGroupFindRes.fail
-      ? HttpStatus.BAD_REQUEST
-      : HttpStatus.OK;
+    const httpStatus: number =
+      this.analytics.defineHttpStatus(taskGroupFindRes);
 
     res.status(httpStatus).json(taskGroupFindRes);
   }

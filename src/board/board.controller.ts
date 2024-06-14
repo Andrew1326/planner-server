@@ -21,6 +21,7 @@ import { UserService } from '../user/user.service';
 import { AuthJwtGuard } from '../auth/auth-jwt.guard';
 import { IBoardCreatePayload } from './types';
 import { TaskGroupService } from '../task-group/task-group.service';
+import { AnalyticsService } from '../utils/analytics/analytics.service';
 
 @Controller('board')
 export class BoardController {
@@ -28,6 +29,7 @@ export class BoardController {
     private readonly boardService: BoardService,
     private readonly userService: UserService,
     private readonly taskGroupService: TaskGroupService,
+    private readonly analyticsService: AnalyticsService,
   ) {}
 
   // route for board creation
@@ -62,9 +64,8 @@ export class BoardController {
     const boardCreateRes = await this.boardService.create(boardCreatePayload);
 
     // define http status based on board creation result
-    const httpStatus: number = boardCreateRes.fail
-      ? HttpStatus.BAD_REQUEST
-      : HttpStatus.OK;
+    const httpStatus: number =
+      this.analyticsService.defineHttpStatus(boardCreateRes);
 
     res.status(httpStatus).json(boardCreateRes);
   }
@@ -77,9 +78,8 @@ export class BoardController {
     const boardFindRes = await this.boardService.findById(boardId);
 
     // define http status based on board find result
-    const httpStatus: number = boardFindRes.fail
-      ? HttpStatus.BAD_REQUEST
-      : HttpStatus.OK;
+    const httpStatus: number =
+      this.analyticsService.defineHttpStatus(boardFindRes);
 
     res.status(httpStatus).json(boardFindRes);
   }
@@ -99,9 +99,8 @@ export class BoardController {
     });
 
     // define http status based on board update result
-    const httpStatus: number = boardUpdateRes.fail
-      ? HttpStatus.BAD_REQUEST
-      : HttpStatus.OK;
+    const httpStatus: number =
+      this.analyticsService.defineHttpStatus(boardUpdateRes);
 
     res.status(httpStatus).json(boardUpdateRes);
   }
@@ -114,9 +113,8 @@ export class BoardController {
     const boardRemoveRes = await this.boardService.remove(boardId);
 
     // define http status based on board remove result
-    const httpStatus: number = boardRemoveRes.fail
-      ? HttpStatus.BAD_REQUEST
-      : HttpStatus.OK;
+    const httpStatus: number =
+      this.analyticsService.defineHttpStatus(boardRemoveRes);
 
     res.status(httpStatus).json(boardRemoveRes);
   }
@@ -132,9 +130,8 @@ export class BoardController {
     const taskGroupFindRes = await this.taskGroupService.findByBoard(boardId);
 
     // define http status based on task group find result
-    const httpStatus: number = taskGroupFindRes.fail
-      ? HttpStatus.BAD_REQUEST
-      : HttpStatus.OK;
+    const httpStatus: number =
+      this.analyticsService.defineHttpStatus(taskGroupFindRes);
 
     res.status(httpStatus).json(taskGroupFindRes);
   }

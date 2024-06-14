@@ -1,8 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {
-  AnalyticsService,
-  IAnalytics,
-} from '../utils/analytics/analytics.service';
+import { AnalyticsService } from '../utils/analytics/analytics.service';
 import { Project } from './entities/project.entity';
 import { DataSource } from 'typeorm';
 import { get } from 'lodash';
@@ -12,19 +9,18 @@ import {
   IProjectUpdatePayload,
   ISafeProject,
 } from './types';
+import safeExecute from '../utils/safe-execute/safeExecute';
 
 @Injectable()
 export class ProjectService {
-  constructor(
-    private readonly dataSource: DataSource,
-    private readonly analytics: AnalyticsService,
-  ) {}
+  constructor(private readonly dataSource: DataSource) {}
 
   // method creates a project
-  async create(
-    projectCreatePayload: IProjectCreatePayload,
-  ): Promise<IAnalytics<string | Error>> {
-    try {
+  async create(projectCreatePayload: IProjectCreatePayload) {
+    return safeExecute<string>({
+      successMessage: 'Project created',
+      failureMessage: 'Project create fail',
+    })(async () => {
       // insert record
       const projectCreateRes = await this.dataSource
         .getRepository(Project)
@@ -33,26 +29,16 @@ export class ProjectService {
       // define project id
       const projectId = get(projectCreateRes, 'identifiers[0].id');
 
-      // analytics success
-      return this.analytics.success<string>({
-        message: 'Project created.',
-        payload: projectId,
-      });
-    } catch (err) {
-      // analytics fail
-      return this.analytics.fail<Error>({
-        message: 'Project create fail.',
-        payload: err,
-      });
-    }
+      return projectId;
+    });
   }
 
   // methods returns all project by user
-  async findByUser(
-    userId: string,
-  ): Promise<IAnalytics<ISafeProject[] | Error>> {
-    try {
-      console.log(userId);
+  async findByUser(userId: string) {
+    return safeExecute<ISafeProject[]>({
+      successMessage: 'Projects by user were found',
+      failureMessage: 'Project by user find fail',
+    })(async () => {
       // get all projects
       const projects = await this.dataSource
         .getRepository(Project)
@@ -63,23 +49,16 @@ export class ProjectService {
         instanceToPlain(project),
       ) as ISafeProject[];
 
-      // analytics success
-      return this.analytics.success<ISafeProject[]>({
-        message: 'Projects by user were found.',
-        payload: plainProjects,
-      });
-    } catch (err) {
-      // analytics fail
-      return this.analytics.fail<Error>({
-        message: 'Project by user find fail.',
-        payload: err,
-      });
-    }
+      return plainProjects;
+    });
   }
 
   // method returns project by id
-  async findById(projectId: string): Promise<IAnalytics<ISafeProject | Error>> {
-    try {
+  async findById(projectId: string) {
+    return safeExecute<ISafeProject>({
+      successMessage: 'Project was found',
+      failureMessage: 'Project find by id fail',
+    })(async () => {
       // get project by id
       const project = await this.dataSource
         .getRepository(Project)
@@ -88,62 +67,35 @@ export class ProjectService {
       // convert project to plain
       const plainProject = instanceToPlain(project) as ISafeProject;
 
-      // analytics success
-      return this.analytics.success<ISafeProject>({
-        message: 'Project was found.',
-        payload: plainProject,
-      });
-    } catch (err) {
-      // analytics fail
-      return this.analytics.fail<Error>({
-        message: 'Project find by id fail.',
-        payload: err,
-      });
-    }
+      return plainProject;
+    });
   }
 
   // method updates project
-  async update({
-    projectUpdateDto,
-    projectId,
-  }: IProjectUpdatePayload): Promise<IAnalytics<string | Error>> {
-    try {
+  async update({ projectUpdateDto, projectId }: IProjectUpdatePayload) {
+    return safeExecute<string>({
+      successMessage: 'Project updated',
+      failureMessage: 'Project update fail',
+    })(async () => {
       // update project
       await this.dataSource
         .getRepository(Project)
         .update({ id: projectId }, projectUpdateDto);
 
-      // analytics success
-      return this.analytics.success<string>({
-        message: 'Project updated.',
-        payload: projectId,
-      });
-    } catch (err) {
-      // analytics fail
-      return this.analytics.fail<Error>({
-        message: 'Project update fail.',
-        payload: err,
-      });
-    }
+      return projectId;
+    });
   }
 
   // method removes project
   async remove(projectId: string) {
-    try {
+    return safeExecute<string>({
+      successMessage: 'Project removed',
+      failureMessage: 'Project remove fail',
+    })(async () => {
       // remove project
       await this.dataSource.getRepository(Project).delete({ id: projectId });
 
-      // analytics success
-      return this.analytics.success<string>({
-        message: 'Project removed.',
-        payload: projectId,
-      });
-    } catch (err) {
-      // analytics fail
-      return this.analytics.fail<Error>({
-        message: 'Project remove fail.',
-        payload: err,
-      });
-    }
+      return projectId;
+    });
   }
 }

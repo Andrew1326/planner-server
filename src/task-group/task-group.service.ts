@@ -1,25 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import {
-  AnalyticsService,
-  IAnalytics,
-} from '../utils/analytics/analytics.service';
 import { DataSource } from 'typeorm';
 import { TaskGroup } from './entities/task-group.entity';
 import { get } from 'lodash';
 import { ITaskGroupCreatePayload, ITaskGroupUpdatePayload } from './types';
+import safeExecute from '../utils/safe-execute/safeExecute';
 
 @Injectable()
 export class TaskGroupService {
-  constructor(
-    private readonly analytics: AnalyticsService,
-    private readonly dataSource: DataSource,
-  ) {}
+  constructor(private readonly dataSource: DataSource) {}
 
   // method creates task group
-  async create(
-    createTaskGroupDto: ITaskGroupCreatePayload,
-  ): Promise<IAnalytics<string | Error>> {
-    try {
+  async create(createTaskGroupDto: ITaskGroupCreatePayload) {
+    return safeExecute<string>({
+      successMessage: 'Task group created',
+      failureMessage: 'Task group create fail',
+    })(async () => {
       // create task group
       const taskGroupCreateRes = await this.dataSource
         .getRepository(TaskGroup)
@@ -28,109 +23,68 @@ export class TaskGroupService {
       // define task group id
       const taskGroupId = get(taskGroupCreateRes, 'identifiers[0].id');
 
-      // success analytics
-      return this.analytics.success<string>({
-        message: 'Task group created.',
-        payload: taskGroupId,
-      });
-    } catch (err) {
-      // fail analytics
-      return this.analytics.fail<Error>({
-        message: 'Task group create fail.',
-        payload: err,
-      });
-    }
+      return taskGroupId;
+    });
   }
 
   // method updates task group
-  async update({
-    taskGroupUpdateDto,
-    taskGroupId,
-  }: ITaskGroupUpdatePayload): Promise<IAnalytics<string | Error>> {
-    try {
+  async update({ taskGroupUpdateDto, taskGroupId }: ITaskGroupUpdatePayload) {
+    return safeExecute<string>({
+      successMessage: 'Task group updated',
+      failureMessage: 'Task group update fail',
+    })(async () => {
       // update task group
       await this.dataSource
         .getRepository(TaskGroup)
         .update({ id: taskGroupId }, taskGroupUpdateDto);
 
-      // success analytics
-      return this.analytics.success<string>({
-        message: 'Task group updated.',
-        payload: taskGroupId,
-      });
-    } catch (err) {
-      // fail analytics
-      return this.analytics.fail<Error>({
-        message: 'Task group update fail.',
-        payload: err,
-      });
-    }
+      return taskGroupId;
+    });
   }
 
   // method removes task group
-  async remove(taskGroupId: string): Promise<IAnalytics<string | Error>> {
-    try {
+  async remove(taskGroupId: string) {
+    return safeExecute<string>({
+      successMessage: 'Task group removed',
+      failureMessage: 'Task group remove fail',
+    })(async () => {
       // remove task group
       await this.dataSource
         .getRepository(TaskGroup)
         .delete({ id: taskGroupId });
 
-      // success analytics
-      return this.analytics.success<string>({
-        message: 'Task group removed.',
-        payload: taskGroupId,
-      });
-    } catch (err) {
-      // fail analytics
-      return this.analytics.fail<Error>({
-        message: 'Task group remove fail.',
-        payload: err,
-      });
-    }
+      return taskGroupId;
+    });
   }
 
   // method finds task group by id
-  async findById(taskGroupId: string): Promise<IAnalytics<TaskGroup | Error>> {
-    try {
+  async findById(taskGroupId: string) {
+    return safeExecute<TaskGroup>({
+      successMessage: 'Task group was found',
+      failureMessage: 'Task group find by id fail',
+    })(async () => {
       // find task group by id
       const taskGroup = await this.dataSource
         .getRepository(TaskGroup)
         .findOne({ where: { id: taskGroupId }, relations: ['tasks', 'owner'] });
 
-      // success analytics
-      return this.analytics.success<TaskGroup>({
-        message: 'Task group was found.',
-        payload: taskGroup,
-      });
-    } catch (err) {
-      // fail analytics
-      return this.analytics.fail<Error>({
-        message: 'Task group find by id fail.',
-        payload: err,
-      });
-    }
+      return taskGroup;
+    });
   }
 
   // method returns task groups by board
-  async findByBoard(boardId: string): Promise<IAnalytics<TaskGroup[] | Error>> {
-    try {
+  async findByBoard(boardId: string) {
+    return safeExecute<TaskGroup[]>({
+      successMessage: 'Task group find by board success',
+      failureMessage: 'Task group find by board fail',
+    })(async () => {
       // find task group by board
       const taskGroups = await this.dataSource.getRepository(TaskGroup).find({
         where: { board: { id: boardId } },
         relations: ['tasks', 'owner'],
       });
 
-      // success analytics
-      return this.analytics.success<TaskGroup[]>({
-        message: 'Task group find by board success.',
-        payload: taskGroups,
-      });
-    } catch (err) {
-      // fail analytics
-      return this.analytics.fail<Error>({
-        message: 'Task group find by board fail.',
-        payload: err,
-      });
-    }
+      return taskGroups;
+    });
   }
 }

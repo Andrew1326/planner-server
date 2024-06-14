@@ -91,9 +91,7 @@ export class UserController {
     const projectFindRes = await this.projectService.findByUser(userId);
 
     // define http status based on project find result
-    const httpStatus: number = projectFindRes.success
-      ? HttpStatus.OK
-      : HttpStatus.BAD_REQUEST;
+    const httpStatus: number = this.analytics.defineHttpStatus(projectFindRes);
 
     res.status(httpStatus).json(projectFindRes);
   }
