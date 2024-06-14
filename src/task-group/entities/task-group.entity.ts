@@ -17,12 +17,15 @@ export class TaskGroup {
   @Column({ type: 'varchar', length: 255, name: 'name' })
   name: string;
 
-  @OneToMany(() => Task, (task) => task.group)
+  @OneToMany(() => Task, (task) => task.group, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   tasks: Task[];
 
   @ManyToOne(() => User)
   owner: User | string;
 
-  @ManyToOne(() => Board)
+  @ManyToOne(() => Board, (board) => board.task_groups)
   board: Board | string;
 }

@@ -121,7 +121,7 @@ export class BoardController {
 
   // route for receiving task groups by board
   @UseGuards(AuthJwtGuard)
-  @Get(':id/task-group')
+  @Get(':id/task_group')
   async taskGroupFindByBoard(
     @Param('id') boardId: string,
     @Res() res: Response,

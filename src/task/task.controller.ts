@@ -4,18 +4,23 @@ import {
   Body,
   Patch,
   Param,
-  Delete, UseGuards, Res
-} from "@nestjs/common";
+  Delete,
+  UseGuards,
+  Res,
+} from '@nestjs/common';
 import { TaskService } from './task.service';
 import { TaskCreateDto } from './dto/task-create.dto';
 import { TaskUpdateDto } from './dto/task-update.dto';
-import { AuthJwtGuard } from "../auth/auth-jwt.guard";
-import { Response } from 'express'
-import { AnalyticsService } from "../utils/analytics/analytics.service";
+import { AuthJwtGuard } from '../auth/auth-jwt.guard';
+import { Response } from 'express';
+import { AnalyticsService } from '../utils/analytics/analytics.service';
 
 @Controller('task')
 export class TaskController {
-  constructor(private readonly taskService: TaskService, private readonly analyticsService: AnalyticsService) {}
+  constructor(
+    private readonly taskService: TaskService,
+    private readonly analyticsService: AnalyticsService,
+  ) {}
 
   // route for task creation
   @UseGuards(AuthJwtGuard)
@@ -24,7 +29,7 @@ export class TaskController {
     // create task
     const taskCreateRes = await this.taskService.create(taskCreateDto);
 
-  // define http status based on creation result
+    // define http status based on creation result
     const httpStatus = this.analyticsService.defineHttpStatus(taskCreateRes);
 
     res.status(httpStatus).json(taskCreateRes);
@@ -33,11 +38,18 @@ export class TaskController {
   // route for task modification
   @UseGuards(AuthJwtGuard)
   @Patch(':id')
-  async update(@Param('id') taskId: string, @Body() taskUpdateDto: TaskUpdateDto, @Res() res: Response) {
+  async update(
+    @Param('id') taskId: string,
+    @Body() taskUpdateDto: TaskUpdateDto,
+    @Res() res: Response,
+  ) {
     // update task
-    const taskUpdateRes = await this.taskService.update({ taskId, taskUpdateDto });
+    const taskUpdateRes = await this.taskService.update({
+      taskId,
+      taskUpdateDto,
+    });
 
-  // define http status based on task modification result
+    // define http status based on task modification result
     const httpStatus = this.analyticsService.defineHttpStatus(taskUpdateRes);
 
     res.status(httpStatus).json(taskUpdateRes);
@@ -50,7 +62,7 @@ export class TaskController {
     // remove task
     const removeTaskRes = await this.taskService.remove(taskId);
 
-  // define http status based on task deletion result
+    // define http status based on task deletion result
     const httpStatus = this.analyticsService.defineHttpStatus(removeTaskRes);
 
     res.status(httpStatus).json(removeTaskRes);

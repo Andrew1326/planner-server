@@ -2,8 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { TaskGroup } from './entities/task-group.entity';
 import { get } from 'lodash';
-import { ITaskGroupCreatePayload, ITaskGroupUpdatePayload } from './types';
+import {
+  ISafeTaskGroup,
+  ITaskGroupCreatePayload,
+  ITaskGroupUpdatePayload,
+} from './types';
 import safeExecute from '../utils/safe-execute/safeExecute';
+import { instanceToPlain } from 'class-transformer';
 
 @Injectable()
 export class TaskGroupService {
@@ -68,7 +73,10 @@ export class TaskGroupService {
         .getRepository(TaskGroup)
         .findOne({ where: { id: taskGroupId }, relations: ['tasks', 'owner'] });
 
-      return taskGroup;
+      // convert task group to plain
+      const taskGroupPlain = instanceToPlain(taskGroup);
+
+      return taskGroupPlain;
     });
   }
 
@@ -84,7 +92,12 @@ export class TaskGroupService {
         relations: ['tasks', 'owner'],
       });
 
-      return taskGroups;
+      // convert task groups to plain
+      const taskGroupsPlain = taskGroups.map((group) =>
+        instanceToPlain(group),
+      ) as ISafeTaskGroup[];
+
+      return taskGroupsPlain;
     });
   }
 }

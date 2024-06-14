@@ -4,6 +4,7 @@ import { TaskGroupController } from './task-group.controller';
 import { AnalyticsService } from '../utils/analytics/analytics.service';
 import { UserService } from '../user/user.service';
 import { EncryptorService } from '../utils/encryptor/encryptor.service';
+import { TaskService } from '../task/task.service';
 
 @Module({
   controllers: [TaskGroupController],
@@ -11,6 +12,7 @@ import { EncryptorService } from '../utils/encryptor/encryptor.service';
     TaskGroupService,
     AnalyticsService,
     UserService,
+    TaskService,
     EncryptorService,
   ],
 })

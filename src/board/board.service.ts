@@ -4,7 +4,6 @@ import { IBoardCreatePayload, IBoardUpdatePayload, ISafeBoard } from './types';
 import { Board } from './entities/board.entity';
 import { get } from 'lodash';
 import { instanceToPlain } from 'class-transformer';
-import { ISafeProject } from '../project/types';
 import safeExecute from '../utils/safe-execute/safeExecute';
 
 @Injectable()
@@ -41,11 +40,11 @@ export class BoardService {
         .find({ where: { project: { id: projectId } }, relations: ['owner'] });
 
       // convert boards to plain
-      const plainBoards = boards.map((board) =>
+      const boardsPlain = boards.map((board) =>
         instanceToPlain(board),
       ) as ISafeBoard[];
 
-      return plainBoards;
+      return boardsPlain;
     });
   }
 
@@ -61,9 +60,9 @@ export class BoardService {
         .findOne({ where: { id: boardId }, relations: ['owner'] });
 
       // convert project to plain
-      const plainBoard = instanceToPlain(board) as ISafeProject;
+      const boardPlain = instanceToPlain(board) as ISafeBoard;
 
-      return plainBoard;
+      return boardPlain;
     });
   }
 
