@@ -7,8 +7,10 @@ import {
   Delete,
   HttpStatus,
   Req,
-  Res, UseGuards
-} from "@nestjs/common";
+  Res,
+  UseGuards,
+  Get,
+} from '@nestjs/common';
 import { TaskGroupService } from './task-group.service';
 import { TaskGroupCreateDto } from './dto/task-group-create.dto';
 import { TaskGroupUpdateDto } from './dto/task-group-update.dto';
@@ -17,7 +19,7 @@ import { ISessionUser } from '../user/types';
 import { Request, Response } from 'express';
 import { UserService } from '../user/user.service';
 import { ITaskGroupCreatePayload } from './types';
-import { AuthJwtGuard } from "../auth/auth-jwt.guard";
+import { AuthJwtGuard } from '../auth/auth-jwt.guard';
 
 @Controller('task_group')
 export class TaskGroupController {
@@ -102,5 +104,20 @@ export class TaskGroupController {
       : HttpStatus.OK;
 
     res.status(httpStatus).json(taskGroupRemoveRes);
+  }
+
+  // route for receiving task group by id
+  @UseGuards(AuthJwtGuard)
+  @Get(':id')
+  async findById(@Param('id') taskGroupId: string, @Res() res: Response) {
+    // find task group
+    const taskGroupFindRes = await this.taskGroupService.findById(taskGroupId);
+
+    // define http status based on task group find result
+    const httpStatus: number = taskGroupFindRes.fail
+      ? HttpStatus.BAD_REQUEST
+      : HttpStatus.OK;
+
+    res.status(httpStatus).json(taskGroupFindRes);
   }
 }

@@ -89,19 +89,39 @@ export class TaskGroupService {
     }
   }
 
+  // method finds task group by id
+  async findById(taskGroupId: string): Promise<IAnalytics<TaskGroup | Error>> {
+    try {
+      // find task group by id
+      const taskGroup = await this.dataSource
+        .getRepository(TaskGroup)
+        .findOne({ where: { id: taskGroupId }, relations: ['tasks', 'owner'] });
+
+      // success analytics
+      return this.analytics.success<TaskGroup>({
+        message: 'Task group was found.',
+        payload: taskGroup,
+      });
+    } catch (err) {
+      // fail analytics
+      return this.analytics.fail<Error>({
+        message: 'Task group find by id fail.',
+        payload: err,
+      });
+    }
+  }
+
   // method returns task groups by board
   async findByBoard(boardId: string): Promise<IAnalytics<TaskGroup[] | Error>> {
     try {
       // find task group by board
-      const taskGroups = await this.dataSource
-        .getRepository(TaskGroup)
-        .find({
-          where: { board: { id: boardId } },
-          relations: ['tasks', 'owner'],
-        });
+      const taskGroups = await this.dataSource.getRepository(TaskGroup).find({
+        where: { board: { id: boardId } },
+        relations: ['tasks', 'owner'],
+      });
 
       // success analytics
-      return this.analytics.success({
+      return this.analytics.success<TaskGroup[]>({
         message: 'Task group find by board success.',
         payload: taskGroups,
       });
