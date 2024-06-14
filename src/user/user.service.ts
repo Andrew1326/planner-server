@@ -44,13 +44,13 @@ export class UserService {
       const userId = get(userCreateRes, 'identifiers[0].id');
 
       // analytics success
-      return this.analytics.success({
+      return this.analytics.success<string>({
         message: 'User created.',
         payload: userId,
       });
     } catch (err) {
       // analytics fail
-      return this.analytics.fail({
+      return this.analytics.fail<Error>({
         message: 'User create fail.',
         payload: err,
       });
@@ -77,7 +77,7 @@ export class UserService {
       });
     } catch (err) {
       // analytics fail
-      return this.analytics.fail({
+      return this.analytics.fail<Error>({
         message: 'User get by email fail.',
         payload: err,
       });
@@ -104,7 +104,7 @@ export class UserService {
       });
     } catch (err) {
       // analytics fail
-      return this.analytics.fail({
+      return this.analytics.fail<Error>({
         message: 'User get by id fail.',
         payload: err,
       });

@@ -20,7 +20,7 @@ import { get } from 'lodash';
 import { AuthJwtGuard } from '../auth/auth-jwt.guard';
 import { UserService } from '../user/user.service';
 import { BoardService } from '../board/board.service';
-import { IProjectCreatePayload } from "./types";
+import { IProjectCreatePayload } from './types';
 
 @Controller('project')
 export class ProjectController {
@@ -56,10 +56,11 @@ export class ProjectController {
     const projectCreatePayload: IProjectCreatePayload = {
       ...projectCreateDto,
       owner: projectOwnerId,
-    }
+    };
 
     // create project
-    const projectCreateRes = await this.projectService.create(projectCreatePayload);
+    const projectCreateRes =
+      await this.projectService.create(projectCreatePayload);
 
     // define http status based on project creation result
     const httpStatus: number = projectCreateRes.fail

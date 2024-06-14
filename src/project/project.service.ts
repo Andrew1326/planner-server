@@ -34,13 +34,13 @@ export class ProjectService {
       const projectId = get(projectCreateRes, 'identifiers[0].id');
 
       // analytics success
-      return this.analytics.success({
+      return this.analytics.success<string>({
         message: 'Project created.',
         payload: projectId,
       });
     } catch (err) {
       // analytics fail
-      return this.analytics.fail({
+      return this.analytics.fail<Error>({
         message: 'Project create fail.',
         payload: err,
       });
@@ -48,9 +48,11 @@ export class ProjectService {
   }
 
   // methods returns all project by user
-  async findByUser(userId: string): Promise<IAnalytics<ISafeProject[] | Error>> {
+  async findByUser(
+    userId: string,
+  ): Promise<IAnalytics<ISafeProject[] | Error>> {
     try {
-      console.log(userId)
+      console.log(userId);
       // get all projects
       const projects = await this.dataSource
         .getRepository(Project)
@@ -62,13 +64,13 @@ export class ProjectService {
       ) as ISafeProject[];
 
       // analytics success
-      return this.analytics.success({
+      return this.analytics.success<ISafeProject[]>({
         message: 'Projects by user were found.',
         payload: plainProjects,
       });
     } catch (err) {
       // analytics fail
-      return this.analytics.fail({
+      return this.analytics.fail<Error>({
         message: 'Project by user find fail.',
         payload: err,
       });
@@ -87,13 +89,13 @@ export class ProjectService {
       const plainProject = instanceToPlain(project) as ISafeProject;
 
       // analytics success
-      return this.analytics.success({
+      return this.analytics.success<ISafeProject>({
         message: 'Project was found.',
         payload: plainProject,
       });
     } catch (err) {
       // analytics fail
-      return this.analytics.fail({
+      return this.analytics.fail<Error>({
         message: 'Project find by id fail.',
         payload: err,
       });
@@ -112,13 +114,13 @@ export class ProjectService {
         .update({ id: projectId }, projectUpdateDto);
 
       // analytics success
-      return this.analytics.success({
+      return this.analytics.success<string>({
         message: 'Project updated.',
         payload: projectId,
       });
     } catch (err) {
       // analytics fail
-      return this.analytics.fail({
+      return this.analytics.fail<Error>({
         message: 'Project update fail.',
         payload: err,
       });
@@ -132,13 +134,13 @@ export class ProjectService {
       await this.dataSource.getRepository(Project).delete({ id: projectId });
 
       // analytics success
-      return this.analytics.success({
+      return this.analytics.success<string>({
         message: 'Project removed.',
         payload: projectId,
       });
     } catch (err) {
       // analytics fail
-      return this.analytics.fail({
+      return this.analytics.fail<Error>({
         message: 'Project remove fail.',
         payload: err,
       });

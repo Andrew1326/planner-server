@@ -19,7 +19,7 @@ import { get } from 'lodash';
 import { ISessionUser } from '../user/types';
 import { UserService } from '../user/user.service';
 import { AuthJwtGuard } from '../auth/auth-jwt.guard';
-import { IBoardCreatePayload } from "./types";
+import { IBoardCreatePayload } from './types';
 
 @Controller('board')
 export class BoardController {
@@ -54,7 +54,7 @@ export class BoardController {
     const boardCreatePayload: IBoardCreatePayload = {
       ...boardCreateDto,
       owner: boardOwnerId,
-    }
+    };
 
     // create board
     const boardCreateRes = await this.boardService.create(boardCreatePayload);

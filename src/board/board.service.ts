@@ -59,7 +59,7 @@ export class BoardService {
       ) as ISafeBoard[];
 
       // analytics success
-      return this.analytics.success({
+      return this.analytics.success<ISafeBoard[]>({
         message: 'Boards were found.',
         payload: plainBoards,
       });
@@ -84,7 +84,7 @@ export class BoardService {
       const plainBoard = instanceToPlain(board) as ISafeProject;
 
       // analytics success
-      return this.analytics.success({
+      return this.analytics.success<ISafeBoard>({
         message: 'Board was found.',
         payload: plainBoard,
       });
@@ -109,7 +109,7 @@ export class BoardService {
         .update({ id: boardId }, boardUpdateDto);
 
       // analytics success
-      return this.analytics.success({
+      return this.analytics.success<string>({
         message: 'Board updated.',
         payload: boardId,
       });
@@ -129,7 +129,7 @@ export class BoardService {
       await this.dataSource.getRepository(Board).delete({ id: boardId });
 
       // analytics success
-      return this.analytics.success({
+      return this.analytics.success<string>({
         message: 'Project removed.',
         payload: boardId,
       });
