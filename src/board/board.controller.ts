@@ -20,12 +20,14 @@ import { ISessionUser } from '../user/types';
 import { UserService } from '../user/user.service';
 import { AuthJwtGuard } from '../auth/auth-jwt.guard';
 import { IBoardCreatePayload } from './types';
+import { TaskGroupService } from '../task-group/task-group.service';
 
 @Controller('board')
 export class BoardController {
   constructor(
     private readonly boardService: BoardService,
     private readonly userService: UserService,
+    private readonly taskGroupService: TaskGroupService,
   ) {}
 
   // route for board creation
@@ -117,5 +119,23 @@ export class BoardController {
       : HttpStatus.OK;
 
     res.status(httpStatus).json(boardRemoveRes);
+  }
+
+  // route for receiving task groups by board
+  @UseGuards(AuthJwtGuard)
+  @Get(':id/task-group')
+  async taskGroupFindByBoardId(
+    @Param('id') boardId: string,
+    @Res() res: Response,
+  ) {
+    // find task groups by board
+    const taskGroupFindRes = await this.taskGroupService.findByBoard(boardId);
+
+    // define http status based on task group find result
+    const httpStatus: number = taskGroupFindRes.fail
+      ? HttpStatus.BAD_REQUEST
+      : HttpStatus.OK;
+
+    res.status(httpStatus).json(taskGroupFindRes);
   }
 }

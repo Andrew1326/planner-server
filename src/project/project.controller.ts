@@ -25,7 +25,7 @@ import { IProjectCreatePayload } from './types';
 @Controller('project')
 export class ProjectController {
   constructor(
-    private readonly projectService: ProjectService,
+    private projectService: ProjectService,
     private readonly userService: UserService,
     private readonly boardService: BoardService,
   ) {}

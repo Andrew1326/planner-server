@@ -13,9 +13,9 @@ export class Board {
   @Column({ type: 'varchar', length: 255, name: 'description' })
   description: string;
 
-  @ManyToOne(() => User, { eager: true })
+  @ManyToOne(() => User)
   owner: User | string;
 
-  @ManyToOne(() => Project, { eager: true })
+  @ManyToOne(() => Project)
   project: Project | string;
 }

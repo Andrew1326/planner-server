@@ -1,14 +1,10 @@
 import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
-export class BoardCreateDto {
+export class TaskGroupCreateDto {
   @IsString()
   @IsNotEmpty()
   name: string;
 
-  @IsString()
-  @IsNotEmpty()
-  description: string;
-
   @IsUUID()
-  project: string;
+  board: string;
 }

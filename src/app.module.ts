@@ -9,6 +9,8 @@ import { AuthModule } from './auth/auth.module';
 import { ProjectModule } from './project/project.module';
 import { BoardModule } from './board/board.module';
 import { SystemModule } from './system/system.module';
+import { TaskGroupModule } from './task-group/task-group.module';
+import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { SystemModule } from './system/system.module';
     ProjectModule,
     BoardModule,
     SystemModule,
+    TaskGroupModule,
+    TaskModule,
   ],
 })
 export class AppModule {}
