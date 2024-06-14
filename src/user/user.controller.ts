@@ -16,12 +16,14 @@ import { get } from 'lodash';
 import { ISessionUser } from './types';
 import { AuthJwtGuard } from '../auth/auth-jwt.guard';
 import { User } from './entities/user.entity';
+import { ProjectService } from "../project/project.service";
 
 @Controller('/user')
 export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly analytics: AnalyticsService,
+    private readonly projectService: ProjectService,
   ) {}
 
   // route for user creation
@@ -70,5 +72,27 @@ export class UserController {
     }
 
     res.status(httpStatus).json(userGetRes);
+  }
+
+// route for receiving user project
+  @UseGuards(AuthJwtGuard)
+  @Get(':id/project')
+  async projectFindByUser(@Req() req: Request, @Res() res: Response) {
+    const sessionUser = get(req, 'user') as ISessionUser;
+    const email = get(sessionUser, 'email', '');
+
+    // trying to find user by email
+    const userGetRes = await this.userService.getByEmail(email);
+
+  // define user id
+    const userId: string = get(userGetRes, 'payload.id', '');
+
+  // find projects
+    const projectFindRes = await this.projectService.findByUser(userId);
+
+  // define http status based on project find result
+    const httpStatus: number = projectFindRes.success ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
+
+    res.status(httpStatus).json(projectFindRes)
   }
 }

@@ -47,13 +47,14 @@ export class ProjectService {
     }
   }
 
-  // methods returns all project
-  async findAll(): Promise<IAnalytics<ISafeProject[] | Error>> {
+  // methods returns all project by user
+  async findByUser(userId: string): Promise<IAnalytics<ISafeProject[] | Error>> {
     try {
+      console.log(userId)
       // get all projects
       const projects = await this.dataSource
         .getRepository(Project)
-        .find({ relations: ['owner'] });
+        .find({ where: { owner: { id: userId } }, relations: ['owner'] });
 
       // convert projects to plain
       const plainProjects = projects.map((project) =>
@@ -62,13 +63,13 @@ export class ProjectService {
 
       // analytics success
       return this.analytics.success({
-        message: 'Projects were found.',
+        message: 'Projects by user were found.',
         payload: plainProjects,
       });
     } catch (err) {
       // analytics fail
       return this.analytics.fail({
-        message: 'Project find all fail.',
+        message: 'Project by user find fail.',
         payload: err,
       });
     }

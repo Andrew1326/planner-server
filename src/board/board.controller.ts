@@ -17,9 +17,9 @@ import { BoardCreateDto } from './dto/board-create.dto';
 import { BoardUpdateDto } from './dto/board-update.dto';
 import { get } from 'lodash';
 import { ISessionUser } from '../user/types';
-import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
 import { AuthJwtGuard } from '../auth/auth-jwt.guard';
+import { IBoardCreatePayload } from "./types";
 
 @Controller('board')
 export class BoardController {
@@ -47,14 +47,17 @@ export class BoardController {
       return res.status(HttpStatus.BAD_REQUEST).json(userGetRes);
     }
 
-    // define board owner
-    const boardOwner = userGetRes.payload as User;
+    // define board owner id
+    const boardOwnerId: string = get(userGetRes, 'payload.id', '');
+
+    // define board create payload
+    const boardCreatePayload: IBoardCreatePayload = {
+      ...boardCreateDto,
+      owner: boardOwnerId,
+    }
 
     // create board
-    const boardCreateRes = await this.boardService.create({
-      boardCreateDto,
-      owner: boardOwner,
-    });
+    const boardCreateRes = await this.boardService.create(boardCreatePayload);
 
     // define http status based on board creation result
     const httpStatus: number = boardCreateRes.fail

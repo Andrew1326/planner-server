@@ -7,9 +7,8 @@ export interface ISafeProject extends Omit<Project, 'owner'> {
   owner: Omit<User, 'password'>;
 }
 
-export interface IProjectCreatePayload {
-  projectCreateDto: ProjectCreateDto;
-  owner: User;
+export interface IProjectCreatePayload extends ProjectCreateDto {
+  owner: string;
 }
 
 export interface IProjectUpdatePayload {

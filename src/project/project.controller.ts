@@ -19,9 +19,8 @@ import { ISessionUser } from '../user/types';
 import { get } from 'lodash';
 import { AuthJwtGuard } from '../auth/auth-jwt.guard';
 import { UserService } from '../user/user.service';
-import { User } from '../user/entities/user.entity';
 import { BoardService } from '../board/board.service';
-import { ISafeProject } from './types';
+import { IProjectCreatePayload } from "./types";
 
 @Controller('project')
 export class ProjectController {
@@ -50,14 +49,17 @@ export class ProjectController {
       return res.status(HttpStatus.BAD_REQUEST).json(userGetRes);
     }
 
-    // define project owner
-    const projectOwner = userGetRes.payload as User;
+    // define project owner id
+    const projectOwnerId: string = get(userGetRes, 'payload.id', '');
+
+    // define project create payload
+    const projectCreatePayload: IProjectCreatePayload = {
+      ...projectCreateDto,
+      owner: projectOwnerId,
+    }
 
     // create project
-    const projectCreateRes = await this.projectService.create({
-      projectCreateDto,
-      owner: projectOwner,
-    });
+    const projectCreateRes = await this.projectService.create(projectCreatePayload);
 
     // define http status based on project creation result
     const httpStatus: number = projectCreateRes.fail
@@ -65,21 +67,6 @@ export class ProjectController {
       : HttpStatus.OK;
 
     res.status(httpStatus).json(projectCreateRes);
-  }
-
-  // route for all project receiving
-  @UseGuards(AuthJwtGuard)
-  @Get()
-  async findAll(@Res() res: Response) {
-    // find all project
-    const projectFindAllRes = await this.projectService.findAll();
-
-    // define http status based on project find all result
-    const httpStatus: number = projectFindAllRes.fail
-      ? HttpStatus.BAD_REQUEST
-      : HttpStatus.OK;
-
-    res.status(httpStatus).json(projectFindAllRes);
   }
 
   // route for receiving project by id

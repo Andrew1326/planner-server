@@ -51,7 +51,7 @@ export class BoardService {
       // get all boards
       const boards = await this.dataSource
         .getRepository(Board)
-        .find({ where: { project: projectId }, relations: ['owner'] });
+        .find({ where: { project: { id: projectId } }, relations: ['owner'] });
 
       // convert boards to plain
       const plainBoards = boards.map((board) =>

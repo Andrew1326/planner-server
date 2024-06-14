@@ -3,9 +3,8 @@ import { User } from '../user/entities/user.entity';
 import { Project } from '../project/entities/project.entity';
 import { BoardUpdateDto } from './dto/board-update.dto';
 
-export interface IBoardCreatePayload {
-  boardCreateDto: BoardCreateDto;
-  owner: User;
+export interface IBoardCreatePayload extends BoardCreateDto {
+  owner: string;
 }
 
 export interface IBoardUpdatePayload {
