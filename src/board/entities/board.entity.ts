@@ -2,12 +2,10 @@ import {
   Column,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { Project } from '../../project/entities/project.entity';
-import { TaskGroup } from '../../task-group/entities/task-group.entity';
 
 @Entity('board')
 export class Board {
@@ -23,12 +21,6 @@ export class Board {
   @ManyToOne(() => User)
   owner: User | string;
 
-  @ManyToOne(() => Project, (project) => project.board)
+  @ManyToOne(() => Project, { onDelete: 'CASCADE' })
   project: Project | string;
-
-  @OneToMany(() => TaskGroup, (taskGroup) => taskGroup.board, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
-  task_groups: TaskGroup | string;
 }

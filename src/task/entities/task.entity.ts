@@ -13,7 +13,7 @@ export class Task {
   @Column({ type: 'text', name: 'description' })
   description: string;
 
-  @ManyToOne(() => TaskGroup, (group) => group.tasks)
+  @ManyToOne(() => TaskGroup, { onDelete: 'CASCADE' })
   group: TaskGroup | string;
 
   @ManyToOne(() => User)
