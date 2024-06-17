@@ -76,7 +76,7 @@ export class UserController {
 
   // route for receiving user project
   @UseGuards(AuthJwtGuard)
-  @Get(':id/project')
+  @Get('current/project')
   async projectFindByUser(@Req() req: Request, @Res() res: Response) {
     const sessionUser = get(req, 'user') as ISessionUser;
     const email = get(sessionUser, 'email', '');

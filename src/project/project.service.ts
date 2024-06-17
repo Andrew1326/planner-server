@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { AnalyticsService } from '../utils/analytics/analytics.service';
 import { Project } from './entities/project.entity';
 import { DataSource } from 'typeorm';
 import { get } from 'lodash';
@@ -42,7 +41,7 @@ export class ProjectService {
       // get all projects
       const projects = await this.dataSource
         .getRepository(Project)
-        .find({ where: { owner: { id: userId } }, relations: ['owner'] });
+        .find({ where: { owner: { id: userId } } });
 
       // convert projects to plain
       const plainProjects = projects.map((project) =>
