@@ -8,15 +8,18 @@ import {
   IProjectUpdatePayload,
   ISafeProject,
 } from './types';
-import safeExecute from '../utils/safe-execute/safeExecute';
+import { AnalyticsService } from '../utils/analytics/analytics.service';
 
 @Injectable()
 export class ProjectService {
-  constructor(private readonly dataSource: DataSource) {}
+  constructor(
+    private readonly dataSource: DataSource,
+    private readonly analyticsService: AnalyticsService,
+  ) {}
 
   // method creates a project
   async create(projectCreatePayload: IProjectCreatePayload) {
-    return safeExecute<string>({
+    return this.analyticsService.provideAnalytics<string>({
       successMessage: 'Project create success',
       failureMessage: 'Project create fail',
       id: 'PROJECT.SERVICE.CREATE',
@@ -35,7 +38,7 @@ export class ProjectService {
 
   // methods returns all project by user
   async findByUser(userId: string) {
-    return safeExecute<ISafeProject[]>({
+    return this.analyticsService.provideAnalytics<ISafeProject[]>({
       successMessage: 'Projects by user success',
       failureMessage: 'Project by user find fail',
       id: 'PROJECT.SERVICE.FIND_BY_USER',
@@ -56,7 +59,7 @@ export class ProjectService {
 
   // method returns project by id
   async findById(projectId: string) {
-    return safeExecute<ISafeProject>({
+    return this.analyticsService.provideAnalytics<ISafeProject>({
       successMessage: 'Project find by id success',
       failureMessage: 'Project find by id fail',
       id: 'PROJECT.SERVICE.FIND_BY_ID',
@@ -75,7 +78,7 @@ export class ProjectService {
 
   // method updates project
   async update({ projectUpdateDto, projectId }: IProjectUpdatePayload) {
-    return safeExecute<string>({
+    return this.analyticsService.provideAnalytics<string>({
       successMessage: 'Project update success',
       failureMessage: 'Project update fail',
       id: 'PROJECT.SERVICE.UPDATE',
@@ -91,7 +94,7 @@ export class ProjectService {
 
   // method removes project
   async remove(projectId: string) {
-    return safeExecute<string>({
+    return this.analyticsService.provideAnalytics<string>({
       successMessage: 'Project remove success',
       failureMessage: 'Project remove fail',
       id: 'PROJECT.SERVICE.REMOVE',

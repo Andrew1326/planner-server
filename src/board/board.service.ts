@@ -4,15 +4,18 @@ import { IBoardCreatePayload, IBoardUpdatePayload, ISafeBoard } from './types';
 import { Board } from './entities/board.entity';
 import { get } from 'lodash';
 import { instanceToPlain } from 'class-transformer';
-import safeExecute from '../utils/safe-execute/safeExecute';
+import { AnalyticsService } from '../utils/analytics/analytics.service';
 
 @Injectable()
 export class BoardService {
-  constructor(private readonly dataSource: DataSource) {}
+  constructor(
+    private readonly dataSource: DataSource,
+    private readonly analyticsService: AnalyticsService,
+  ) {}
 
   // method creates a board
   async create(boardCreatePayload: IBoardCreatePayload) {
-    return safeExecute<string>({
+    return this.analyticsService.provideAnalytics<string>({
       successMessage: 'Board create success',
       failureMessage: 'Board create fail',
       id: 'BOARD.SERVICE.CREATE',
@@ -31,7 +34,7 @@ export class BoardService {
 
   // method returns all board by project
   async findByProject(projectId: string) {
-    return safeExecute<ISafeBoard[]>({
+    return this.analyticsService.provideAnalytics<ISafeBoard[]>({
       successMessage: 'Board find by project success',
       failureMessage: 'Board find by project fail',
       id: 'BOARD.SERVICE.FIND_BY_PROJECT',
@@ -52,7 +55,7 @@ export class BoardService {
 
   // finds board by id
   async findById(boardId: string) {
-    return safeExecute<ISafeBoard>({
+    return this.analyticsService.provideAnalytics<ISafeBoard>({
       successMessage: 'Board find by id success',
       failureMessage: 'Board find by id fail',
       id: 'BOARD.SERVICE.FIND_BY_ID',
@@ -71,7 +74,7 @@ export class BoardService {
 
   // method updates board
   async update({ boardUpdateDto, boardId }: IBoardUpdatePayload) {
-    return safeExecute<string>({
+    return this.analyticsService.provideAnalytics<string>({
       successMessage: 'Board update success',
       failureMessage: 'Board update fail',
       id: 'BOARD.SERVICE.UPDATE',
@@ -87,7 +90,7 @@ export class BoardService {
 
   // method removes board
   async remove(boardId: string) {
-    return safeExecute<string>({
+    return this.analyticsService.provideAnalytics<string>({
       successMessage: 'Project remove success',
       failureMessage: 'Board remove fail',
       id: 'BOARD.SERVICE.REMOVE',

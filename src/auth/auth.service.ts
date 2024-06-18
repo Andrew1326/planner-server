@@ -1,14 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { pick } from 'lodash';
-import {
-  AnalyticsService,
-  IAnalytics,
-} from '../utils/analytics/analytics.service';
+import { AnalyticsService } from '../utils/analytics/analytics.service';
 import { EncryptorService } from '../utils/encryptor/encryptor.service';
 import { UserService } from '../user/user.service';
 import { User } from '../user/entities/user.entity';
-import safeExecute from '../utils/safe-execute/safeExecute';
 
 export interface ILocalCredentials {
   email: string;
@@ -20,7 +16,7 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly encryptor: EncryptorService,
-    private readonly analytics: AnalyticsService,
+    private readonly analyticsService: AnalyticsService,
     private readonly userService: UserService,
   ) {}
 
@@ -28,7 +24,7 @@ export class AuthService {
   async login(user: Pick<User, 'email' | 'name'>) {
     const payload = pick(user, 'email', 'name', 'roles');
 
-    return safeExecute<string>({
+    return this.analyticsService.provideAnalytics<string>({
       successMessage: 'Token generate success',
       failureMessage: 'Token generate fail',
       id: 'AUTH.SERVICE.LOGIN',
@@ -58,13 +54,13 @@ export class AuthService {
 
     // fail if the password doesn't match
     if (!passwordMatch)
-      return this.analytics.fail({
+      return this.analyticsService.analyticsFail({
         message: 'Incorrect password',
         payload: null,
         id: 'AUTH.SERVICE.VALIDATE_USER_PASSWORD_MATCH',
       });
 
-    return this.analytics.success({
+    return this.analyticsService.analyticsSuccess({
       message: 'User found. Passwords match',
       payload: user,
       id: 'AUTH.SERVICE.VALIDATE_USER',

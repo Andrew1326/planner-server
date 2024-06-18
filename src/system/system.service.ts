@@ -1,21 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-import {
-  AnalyticsService,
-  IAnalytics,
-} from '../utils/analytics/analytics.service';
-import safeExecute from '../utils/safe-execute/safeExecute';
+import { AnalyticsService } from '../utils/analytics/analytics.service';
 
 @Injectable()
 export class SystemService {
   constructor(
     private readonly dataSource: DataSource,
-    private readonly analytics: AnalyticsService,
+    private readonly analyticsService: AnalyticsService,
   ) {}
 
   // method drops database
   async databaseDrop() {
-    return safeExecute<null>({
+    return this.analyticsService.provideAnalytics<null>({
       successMessage: 'Database drop success',
       failureMessage: 'Database drop fail',
       id: 'SYSTEM.SERVICE.DATABASE_DROP',

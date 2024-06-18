@@ -7,16 +7,19 @@ import {
   ITaskGroupCreatePayload,
   ITaskGroupUpdatePayload,
 } from './types';
-import safeExecute from '../utils/safe-execute/safeExecute';
 import { instanceToPlain } from 'class-transformer';
+import { AnalyticsService } from '../utils/analytics/analytics.service';
 
 @Injectable()
 export class TaskGroupService {
-  constructor(private readonly dataSource: DataSource) {}
+  constructor(
+    private readonly dataSource: DataSource,
+    private readonly analyticsService: AnalyticsService,
+  ) {}
 
   // method creates task group
   async create(createTaskGroupDto: ITaskGroupCreatePayload) {
-    return safeExecute<string>({
+    return this.analyticsService.provideAnalytics<string>({
       successMessage: 'Task group create success',
       failureMessage: 'Task group create fail',
       id: 'TASK-GROUP.SERVICE.CREATE',
@@ -35,7 +38,7 @@ export class TaskGroupService {
 
   // method updates task group
   async update({ taskGroupUpdateDto, taskGroupId }: ITaskGroupUpdatePayload) {
-    return safeExecute<string>({
+    return this.analyticsService.provideAnalytics<string>({
       successMessage: 'Task group update success',
       failureMessage: 'Task group update fail',
       id: 'TASK-GROUP.SERVICE.UPDATE',
@@ -51,7 +54,7 @@ export class TaskGroupService {
 
   // method removes task group
   async remove(taskGroupId: string) {
-    return safeExecute<string>({
+    return this.analyticsService.provideAnalytics<string>({
       successMessage: 'Task group remove success',
       failureMessage: 'Task group remove fail',
       id: 'TASK-GROUP.SERVICE.REMOVE',
@@ -67,7 +70,7 @@ export class TaskGroupService {
 
   // method finds task group by id
   async findById(taskGroupId: string) {
-    return safeExecute<TaskGroup>({
+    return this.analyticsService.provideAnalytics<TaskGroup>({
       successMessage: 'Task group by id success',
       failureMessage: 'Task group by id fail',
       id: 'TASK-GROUP.SERVICE.FIND_BY_ID',
@@ -86,7 +89,7 @@ export class TaskGroupService {
 
   // method returns task groups by board
   async findByBoard(boardId: string) {
-    return safeExecute<TaskGroup[]>({
+    return this.analyticsService.provideAnalytics<TaskGroup[]>({
       successMessage: 'Task group find by board success',
       failureMessage: 'Task group find by board fail',
       id: 'TASK-GROUP.SERVICE.FIND_BY_BOARD',
