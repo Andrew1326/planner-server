@@ -16,8 +16,9 @@ export class UserService {
   // method for a new user creation
   create(userCreateDto: UserCreateDto) {
     return safeExecute<User>({
-      successMessage: 'User created',
+      successMessage: 'User create success',
       failureMessage: 'User create fail',
+      id: 'USER.SERVICE.CREATE',
     })(async () => {
       // payload for user creation
       const userCreateData: Omit<User, 'id'> = {
@@ -48,6 +49,7 @@ export class UserService {
     return safeExecute<User>({
       successMessage: 'User get by email success',
       failureMessage: 'User get by email fail',
+      id: 'USER.SERVICE.GET_BY_EMAIL',
     })(async () => {
       // get user record
       const user = await this.dataSource
@@ -66,8 +68,9 @@ export class UserService {
   // method returns user by id
   async findById(id: string) {
     return safeExecute<User>({
-      successMessage: 'User by id found',
-      failureMessage: 'User get by id fail.',
+      successMessage: 'User by id success',
+      failureMessage: 'User get by id fail',
+      id: 'USER.SERVICE.FIND_BY_ID',
     })(async () => {
       // get user record
       const user = await this.dataSource

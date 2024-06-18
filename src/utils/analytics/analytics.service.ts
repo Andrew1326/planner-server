@@ -5,6 +5,7 @@ export interface IAnalytics<TPayload> {
   payload?: TPayload;
   success?: boolean;
   fail?: boolean;
+  id: string;
 }
 
 // TODO implement additional logic for caching errors using Sentry

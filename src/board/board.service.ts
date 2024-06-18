@@ -13,8 +13,9 @@ export class BoardService {
   // method creates a board
   async create(boardCreatePayload: IBoardCreatePayload) {
     return safeExecute<string>({
-      successMessage: 'Board created',
+      successMessage: 'Board create success',
       failureMessage: 'Board create fail',
+      id: 'BOARD.SERVICE.CREATE',
     })(async () => {
       // insert record
       const boardCreateRes = await this.dataSource
@@ -31,8 +32,9 @@ export class BoardService {
   // method returns all board by project
   async findByProject(projectId: string) {
     return safeExecute<ISafeBoard[]>({
-      successMessage: 'Boards were found',
-      failureMessage: 'Board find all fail',
+      successMessage: 'Board find by project success',
+      failureMessage: 'Board find by project fail',
+      id: 'BOARD.SERVICE.FIND_BY_PROJECT',
     })(async () => {
       // get all boards
       const boards = await this.dataSource
@@ -51,8 +53,9 @@ export class BoardService {
   // finds board by id
   async findById(boardId: string) {
     return safeExecute<ISafeBoard>({
-      successMessage: 'Board was found',
+      successMessage: 'Board find by id success',
       failureMessage: 'Board find by id fail',
+      id: 'BOARD.SERVICE.FIND_BY_ID',
     })(async () => {
       // get board by id
       const board = await this.dataSource
@@ -69,8 +72,9 @@ export class BoardService {
   // method updates board
   async update({ boardUpdateDto, boardId }: IBoardUpdatePayload) {
     return safeExecute<string>({
-      successMessage: 'Board updated',
+      successMessage: 'Board update success',
       failureMessage: 'Board update fail',
+      id: 'BOARD.SERVICE.UPDATE',
     })(async () => {
       // update board
       await this.dataSource
@@ -84,8 +88,9 @@ export class BoardService {
   // method removes board
   async remove(boardId: string) {
     return safeExecute<string>({
-      successMessage: 'Project removed',
+      successMessage: 'Project remove success',
       failureMessage: 'Board remove fail',
+      id: 'BOARD.SERVICE.REMOVE',
     })(async () => {
       // remove board
       await this.dataSource.getRepository(Board).delete({ id: boardId });

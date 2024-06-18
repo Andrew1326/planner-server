@@ -36,6 +36,7 @@ export class UserController {
     if (userGetRes.success) {
       const emailExistsAnalytics = this.analytics.fail({
         message: 'Fail, user with this email already exists.',
+        id: 'USER.CONTROLLER.CREATE_DUPLICATE_EMAIL',
       });
 
       return res.status(HttpStatus.BAD_REQUEST).json(emailExistsAnalytics);

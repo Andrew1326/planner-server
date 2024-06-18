@@ -1,17 +1,19 @@
 import { IAnalytics } from '../analytics/analytics.service';
 
-interface ISafeExecuteMessagePayload {
+interface ISafeExecutePayload {
   successMessage: string;
   failureMessage: string;
+  id: string;
 }
 
 export type TSafeExecuteFn = <TResult>(
-  messages: ISafeExecuteMessagePayload,
+  messages: ISafeExecutePayload,
 ) => (fn: Function) => Promise<IAnalytics<TResult | Error>>;
 
 const safeExecute: TSafeExecuteFn = <TResult>({
   successMessage,
   failureMessage,
+  id,
 }) => {
   return async (fn) => {
     try {
@@ -23,6 +25,7 @@ const safeExecute: TSafeExecuteFn = <TResult>({
         payload: result,
         fail: false,
         success: true,
+        id,
       };
 
       return analytics;
@@ -36,6 +39,7 @@ const safeExecute: TSafeExecuteFn = <TResult>({
         payload: err,
         fail: true,
         success: false,
+        id,
       };
 
       return analytics;

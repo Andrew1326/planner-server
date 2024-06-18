@@ -13,8 +13,9 @@ export class TaskService {
   // method for task creation
   create(taskCreateDto: TaskCreateDto) {
     return safeExecute<string>({
-      successMessage: 'Task created',
+      successMessage: 'Task create success',
       failureMessage: 'Task create fail',
+      id: 'TASK.SERVICE.CREATE',
     })(async () => {
       // create task
       const taskCreateRes = await this.dataSource
@@ -31,8 +32,9 @@ export class TaskService {
   // method updates task
   update({ taskId, taskUpdateDto }: ITaskUpdatePayload) {
     return safeExecute<string>({
-      successMessage: 'Task updated',
+      successMessage: 'Task update success',
       failureMessage: 'Task update fail',
+      id: 'TASK.SERVICE.UPDATE',
     })(async () => {
       // update task
       await this.dataSource
@@ -46,8 +48,9 @@ export class TaskService {
   // method removes task by id
   remove(taskId: string) {
     return safeExecute<string>({
-      successMessage: 'Task removed',
+      successMessage: 'Task remove success',
       failureMessage: 'Task remove fail',
+      id: 'TASK.SERVICE.REMOVE',
     })(async () => {
       // remove task
       await this.dataSource.getRepository(Task).delete({ id: taskId });
@@ -59,8 +62,9 @@ export class TaskService {
   // method returns task by task group id
   findByGroupId(groupId: string) {
     return safeExecute<Task[]>({
-      successMessage: 'Tasks by group were found',
-      failureMessage: 'Task by group find fail',
+      successMessage: 'Tasks by group id success',
+      failureMessage: 'Task by group id fail',
+      id: 'TASK.SERVICE.FIND_BY_GROUP_ID',
     })(async () => {
       // find tasks by group
       const tasks = await this.dataSource

@@ -17,8 +17,9 @@ export class TaskGroupService {
   // method creates task group
   async create(createTaskGroupDto: ITaskGroupCreatePayload) {
     return safeExecute<string>({
-      successMessage: 'Task group created',
+      successMessage: 'Task group create success',
       failureMessage: 'Task group create fail',
+      id: 'TASK-GROUP.SERVICE.CREATE',
     })(async () => {
       // create task group
       const taskGroupCreateRes = await this.dataSource
@@ -35,8 +36,9 @@ export class TaskGroupService {
   // method updates task group
   async update({ taskGroupUpdateDto, taskGroupId }: ITaskGroupUpdatePayload) {
     return safeExecute<string>({
-      successMessage: 'Task group updated',
+      successMessage: 'Task group update success',
       failureMessage: 'Task group update fail',
+      id: 'TASK-GROUP.SERVICE.UPDATE',
     })(async () => {
       // update task group
       await this.dataSource
@@ -50,8 +52,9 @@ export class TaskGroupService {
   // method removes task group
   async remove(taskGroupId: string) {
     return safeExecute<string>({
-      successMessage: 'Task group removed',
+      successMessage: 'Task group remove success',
       failureMessage: 'Task group remove fail',
+      id: 'TASK-GROUP.SERVICE.REMOVE',
     })(async () => {
       // remove task group
       await this.dataSource
@@ -65,8 +68,9 @@ export class TaskGroupService {
   // method finds task group by id
   async findById(taskGroupId: string) {
     return safeExecute<TaskGroup>({
-      successMessage: 'Task group was found',
-      failureMessage: 'Task group find by id fail',
+      successMessage: 'Task group by id success',
+      failureMessage: 'Task group by id fail',
+      id: 'TASK-GROUP.SERVICE.FIND_BY_ID',
     })(async () => {
       // find task group by id
       const taskGroup = await this.dataSource
@@ -85,6 +89,7 @@ export class TaskGroupService {
     return safeExecute<TaskGroup[]>({
       successMessage: 'Task group find by board success',
       failureMessage: 'Task group find by board fail',
+      id: 'TASK-GROUP.SERVICE.FIND_BY_BOARD',
     })(async () => {
       // find task group by board
       const taskGroups = await this.dataSource.getRepository(TaskGroup).find({

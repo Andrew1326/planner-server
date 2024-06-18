@@ -8,6 +8,7 @@ import {
 import { EncryptorService } from '../utils/encryptor/encryptor.service';
 import { UserService } from '../user/user.service';
 import { User } from '../user/entities/user.entity';
+import safeExecute from '../utils/safe-execute/safeExecute';
 
 export interface ILocalCredentials {
   email: string;
@@ -24,25 +25,19 @@ export class AuthService {
   ) {}
 
   // method handlers user login (generates jwt)
-  async login(
-    user: Pick<User, 'email' | 'name'>,
-  ): Promise<IAnalytics<string | Error>> {
+  async login(user: Pick<User, 'email' | 'name'>) {
     const payload = pick(user, 'email', 'name', 'roles');
 
-    try {
+    return safeExecute<string>({
+      successMessage: 'Token generate success',
+      failureMessage: 'Token generate fail',
+      id: 'AUTH.SERVICE.LOGIN',
+    })(async () => {
       // create jwt token based on payload
       const accessToken = await this.jwtService.signAsync(payload);
 
-      return this.analytics.success({
-        message: 'Token generated',
-        payload: accessToken,
-      });
-    } catch (err) {
-      return this.analytics.fail({
-        message: 'Token not generated',
-        payload: err as Error,
-      });
-    }
+      return accessToken;
+    });
   }
 
   // function is used to validate user using credentials (email and password)
@@ -66,11 +61,13 @@ export class AuthService {
       return this.analytics.fail({
         message: 'Incorrect password',
         payload: null,
+        id: 'AUTH.SERVICE.VALIDATE_USER_PASSWORD_MATCH',
       });
 
     return this.analytics.success({
       message: 'User found. Passwords match',
       payload: user,
+      id: 'AUTH.SERVICE.VALIDATE_USER',
     });
   }
 }

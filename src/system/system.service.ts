@@ -4,6 +4,7 @@ import {
   AnalyticsService,
   IAnalytics,
 } from '../utils/analytics/analytics.service';
+import safeExecute from '../utils/safe-execute/safeExecute';
 
 @Injectable()
 export class SystemService {
@@ -13,22 +14,16 @@ export class SystemService {
   ) {}
 
   // method drops database
-  async databaseDrop(): Promise<IAnalytics<null | Error>> {
-    try {
+  async databaseDrop() {
+    return safeExecute<null>({
+      successMessage: 'Database drop success',
+      failureMessage: 'Database drop fail',
+      id: 'SYSTEM.SERVICE.DATABASE_DROP',
+    })(async () => {
       // drop database
       await this.dataSource.dropDatabase();
 
-      // success analytics
-      return this.analytics.success<null>({
-        message: 'Database dropped.',
-        payload: null,
-      });
-    } catch (err) {
-      // analytics fail
-      return this.analytics.fail<Error>({
-        message: 'Database drop fail.',
-        payload: err,
-      });
-    }
+      return null;
+    });
   }
 }

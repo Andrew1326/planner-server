@@ -17,8 +17,9 @@ export class ProjectService {
   // method creates a project
   async create(projectCreatePayload: IProjectCreatePayload) {
     return safeExecute<string>({
-      successMessage: 'Project created',
+      successMessage: 'Project create success',
       failureMessage: 'Project create fail',
+      id: 'PROJECT.SERVICE.CREATE',
     })(async () => {
       // insert record
       const projectCreateRes = await this.dataSource
@@ -35,8 +36,9 @@ export class ProjectService {
   // methods returns all project by user
   async findByUser(userId: string) {
     return safeExecute<ISafeProject[]>({
-      successMessage: 'Projects by user were found',
+      successMessage: 'Projects by user success',
       failureMessage: 'Project by user find fail',
+      id: 'PROJECT.SERVICE.FIND_BY_USER',
     })(async () => {
       // get all projects
       const projects = await this.dataSource
@@ -55,8 +57,9 @@ export class ProjectService {
   // method returns project by id
   async findById(projectId: string) {
     return safeExecute<ISafeProject>({
-      successMessage: 'Project was found',
+      successMessage: 'Project find by id success',
       failureMessage: 'Project find by id fail',
+      id: 'PROJECT.SERVICE.FIND_BY_ID',
     })(async () => {
       // get project by id
       const project = await this.dataSource
@@ -73,8 +76,9 @@ export class ProjectService {
   // method updates project
   async update({ projectUpdateDto, projectId }: IProjectUpdatePayload) {
     return safeExecute<string>({
-      successMessage: 'Project updated',
+      successMessage: 'Project update success',
       failureMessage: 'Project update fail',
+      id: 'PROJECT.SERVICE.UPDATE',
     })(async () => {
       // update project
       await this.dataSource
@@ -88,8 +92,9 @@ export class ProjectService {
   // method removes project
   async remove(projectId: string) {
     return safeExecute<string>({
-      successMessage: 'Project removed',
+      successMessage: 'Project remove success',
       failureMessage: 'Project remove fail',
+      id: 'PROJECT.SERVICE.REMOVE',
     })(async () => {
       // remove project
       await this.dataSource.getRepository(Project).delete({ id: projectId });
