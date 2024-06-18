@@ -11,7 +11,7 @@ export class SystemService {
 
   // method drops database
   async databaseDrop() {
-    return this.analyticsService.provideAnalytics<null>({
+    return this.analyticsService.provide<null>({
       successMessage: 'Database drop success',
       failureMessage: 'Database drop fail',
       id: 'SYSTEM.SERVICE.DATABASE_DROP',

@@ -34,7 +34,7 @@ export class UserController {
 
     // fail if user with current email was found => email must be unique
     if (userGetRes.success) {
-      const emailExistsAnalytics = this.analytics.analyticsFail({
+      const emailExistsAnalytics = this.analytics.fail({
         message: 'Fail, user with this email already exists.',
         id: 'USER.CONTROLLER.CREATE_DUPLICATE_EMAIL',
       });

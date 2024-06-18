@@ -16,7 +16,7 @@ export class UserService {
 
   // method for a new user creation
   create(userCreateDto: UserCreateDto) {
-    return this.analyticsService.provideAnalytics<User>({
+    return this.analyticsService.provide<User>({
       successMessage: 'User create success',
       failureMessage: 'User create fail',
       id: 'USER.SERVICE.CREATE',
@@ -47,7 +47,7 @@ export class UserService {
 
   // method returns user by email
   getByEmail(email: string) {
-    return this.analyticsService.provideAnalytics<User>({
+    return this.analyticsService.provide<User>({
       successMessage: 'User get by email success',
       failureMessage: 'User get by email fail',
       id: 'USER.SERVICE.GET_BY_EMAIL',
@@ -68,7 +68,7 @@ export class UserService {
 
   // method returns user by id
   async findById(id: string) {
-    return this.analyticsService.provideAnalytics<User>({
+    return this.analyticsService.provide<User>({
       successMessage: 'User by id success',
       failureMessage: 'User get by id fail',
       id: 'USER.SERVICE.FIND_BY_ID',

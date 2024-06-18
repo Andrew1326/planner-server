@@ -21,12 +21,12 @@ export class AnalyticsService {
   constructor() {}
 
   // method to output success analytics
-  analyticsSuccess<TPayload>(data: IAnalytics<TPayload>): IAnalytics<TPayload> {
+  success<TPayload>(data: IAnalytics<TPayload>): IAnalytics<TPayload> {
     return { ...data, success: true, fail: false };
   }
 
   // method to output fail analytics
-  analyticsFail<TPayload>(data: IAnalytics<TPayload>): IAnalytics<TPayload> {
+  fail<TPayload>(data: IAnalytics<TPayload>): IAnalytics<TPayload> {
     console.log(`===========${data.message}===========`);
     console.log(data.payload);
 
@@ -39,7 +39,7 @@ export class AnalyticsService {
   }
 
   // method for executing function and providing analytics
-  provideAnalytics<TResult>({
+  provide<TResult>({
     successMessage,
     failureMessage,
     id,
@@ -50,7 +50,7 @@ export class AnalyticsService {
         const result = await fn();
 
         // compose success analytics
-        return this.analyticsSuccess<TResult>({
+        return this.success<TResult>({
           message: successMessage,
           payload: result,
           fail: false,
@@ -59,7 +59,7 @@ export class AnalyticsService {
         });
       } catch (err) {
         // compose fail analytics
-        return this.analyticsFail<Error>({
+        return this.fail<Error>({
           message: failureMessage,
           payload: err,
           fail: true,

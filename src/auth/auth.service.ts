@@ -24,7 +24,7 @@ export class AuthService {
   async login(user: Pick<User, 'email' | 'name'>) {
     const payload = pick(user, 'email', 'name', 'roles');
 
-    return this.analyticsService.provideAnalytics<string>({
+    return this.analyticsService.provide<string>({
       successMessage: 'Token generate success',
       failureMessage: 'Token generate fail',
       id: 'AUTH.SERVICE.LOGIN',
@@ -54,13 +54,13 @@ export class AuthService {
 
     // fail if the password doesn't match
     if (!passwordMatch)
-      return this.analyticsService.analyticsFail({
+      return this.analyticsService.fail({
         message: 'Incorrect password',
         payload: null,
         id: 'AUTH.SERVICE.VALIDATE_USER_PASSWORD_MATCH',
       });
 
-    return this.analyticsService.analyticsSuccess({
+    return this.analyticsService.success({
       message: 'User found. Passwords match',
       payload: user,
       id: 'AUTH.SERVICE.VALIDATE_USER',

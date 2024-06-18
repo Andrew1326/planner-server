@@ -15,7 +15,7 @@ export class BoardService {
 
   // method creates a board
   async create(boardCreatePayload: IBoardCreatePayload) {
-    return this.analyticsService.provideAnalytics<string>({
+    return this.analyticsService.provide<string>({
       successMessage: 'Board create success',
       failureMessage: 'Board create fail',
       id: 'BOARD.SERVICE.CREATE',
@@ -34,7 +34,7 @@ export class BoardService {
 
   // method returns all board by project
   async findByProject(projectId: string) {
-    return this.analyticsService.provideAnalytics<ISafeBoard[]>({
+    return this.analyticsService.provide<ISafeBoard[]>({
       successMessage: 'Board find by project success',
       failureMessage: 'Board find by project fail',
       id: 'BOARD.SERVICE.FIND_BY_PROJECT',
@@ -55,7 +55,7 @@ export class BoardService {
 
   // finds board by id
   async findById(boardId: string) {
-    return this.analyticsService.provideAnalytics<ISafeBoard>({
+    return this.analyticsService.provide<ISafeBoard>({
       successMessage: 'Board find by id success',
       failureMessage: 'Board find by id fail',
       id: 'BOARD.SERVICE.FIND_BY_ID',
@@ -74,7 +74,7 @@ export class BoardService {
 
   // method updates board
   async update({ boardUpdateDto, boardId }: IBoardUpdatePayload) {
-    return this.analyticsService.provideAnalytics<string>({
+    return this.analyticsService.provide<string>({
       successMessage: 'Board update success',
       failureMessage: 'Board update fail',
       id: 'BOARD.SERVICE.UPDATE',
@@ -90,7 +90,7 @@ export class BoardService {
 
   // method removes board
   async remove(boardId: string) {
-    return this.analyticsService.provideAnalytics<string>({
+    return this.analyticsService.provide<string>({
       successMessage: 'Project remove success',
       failureMessage: 'Board remove fail',
       id: 'BOARD.SERVICE.REMOVE',

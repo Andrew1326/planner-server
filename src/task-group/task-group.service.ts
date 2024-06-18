@@ -19,7 +19,7 @@ export class TaskGroupService {
 
   // method creates task group
   async create(createTaskGroupDto: ITaskGroupCreatePayload) {
-    return this.analyticsService.provideAnalytics<string>({
+    return this.analyticsService.provide<string>({
       successMessage: 'Task group create success',
       failureMessage: 'Task group create fail',
       id: 'TASK-GROUP.SERVICE.CREATE',
@@ -38,7 +38,7 @@ export class TaskGroupService {
 
   // method updates task group
   async update({ taskGroupUpdateDto, taskGroupId }: ITaskGroupUpdatePayload) {
-    return this.analyticsService.provideAnalytics<string>({
+    return this.analyticsService.provide<string>({
       successMessage: 'Task group update success',
       failureMessage: 'Task group update fail',
       id: 'TASK-GROUP.SERVICE.UPDATE',
@@ -54,7 +54,7 @@ export class TaskGroupService {
 
   // method removes task group
   async remove(taskGroupId: string) {
-    return this.analyticsService.provideAnalytics<string>({
+    return this.analyticsService.provide<string>({
       successMessage: 'Task group remove success',
       failureMessage: 'Task group remove fail',
       id: 'TASK-GROUP.SERVICE.REMOVE',
@@ -70,7 +70,7 @@ export class TaskGroupService {
 
   // method finds task group by id
   async findById(taskGroupId: string) {
-    return this.analyticsService.provideAnalytics<TaskGroup>({
+    return this.analyticsService.provide<TaskGroup>({
       successMessage: 'Task group by id success',
       failureMessage: 'Task group by id fail',
       id: 'TASK-GROUP.SERVICE.FIND_BY_ID',
@@ -89,7 +89,7 @@ export class TaskGroupService {
 
   // method returns task groups by board
   async findByBoard(boardId: string) {
-    return this.analyticsService.provideAnalytics<TaskGroup[]>({
+    return this.analyticsService.provide<TaskGroup[]>({
       successMessage: 'Task group find by board success',
       failureMessage: 'Task group find by board fail',
       id: 'TASK-GROUP.SERVICE.FIND_BY_BOARD',

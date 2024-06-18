@@ -15,7 +15,7 @@ export class TaskService {
 
   // method for task creation
   create(taskCreateDto: TaskCreateDto) {
-    return this.analyticsService.provideAnalytics<string>({
+    return this.analyticsService.provide<string>({
       successMessage: 'Task create success',
       failureMessage: 'Task create fail',
       id: 'TASK.SERVICE.CREATE',
@@ -34,7 +34,7 @@ export class TaskService {
 
   // method updates task
   update({ taskId, taskUpdateDto }: ITaskUpdatePayload) {
-    return this.analyticsService.provideAnalytics<string>({
+    return this.analyticsService.provide<string>({
       successMessage: 'Task update success',
       failureMessage: 'Task update fail',
       id: 'TASK.SERVICE.UPDATE',
@@ -50,7 +50,7 @@ export class TaskService {
 
   // method removes task by id
   remove(taskId: string) {
-    return this.analyticsService.provideAnalytics<string>({
+    return this.analyticsService.provide<string>({
       successMessage: 'Task remove success',
       failureMessage: 'Task remove fail',
       id: 'TASK.SERVICE.REMOVE',
@@ -64,7 +64,7 @@ export class TaskService {
 
   // method returns task by task group id
   findByGroupId(groupId: string) {
-    return this.analyticsService.provideAnalytics<Task[]>({
+    return this.analyticsService.provide<Task[]>({
       successMessage: 'Tasks by group id success',
       failureMessage: 'Task by group id fail',
       id: 'TASK.SERVICE.FIND_BY_GROUP_ID',
