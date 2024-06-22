@@ -7,7 +7,7 @@ export class Task {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 255, name: 'name' })
+  @Column({ type: 'text', name: 'name' })
   name: string;
 
   @Column({ type: 'text', name: 'description' })

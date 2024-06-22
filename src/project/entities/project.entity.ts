@@ -6,10 +6,10 @@ export class Project {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 255, name: 'name' })
+  @Column({ type: 'text', name: 'name' })
   name: string;
 
-  @Column({ type: 'varchar', length: 255, name: 'description' })
+  @Column({ type: 'text', name: 'description' })
   description: string;
 
   @ManyToOne(() => User)
